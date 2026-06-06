@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexCRM — Tu plataforma todo en uno</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #111114;
+      --surface-2: #18181b;
+      --border: rgba(255,255,255,0.07);
+      --text: #fafafa;
+      --muted: #71717a;
+      --accent: #7c3aed;
+      --accent-2: #06b6d4;
+      --accent-3: #10b981;
+      --accent-4: #f59e0b;
+      --accent-5: #ef4444;
+      --gradient: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 99px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: rgba(9,9,11,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 20px; font-weight: 700; letter-spacing: -0.5px;
+    }
+    .nav-logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gradient); }
+    .logo-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--gradient);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 14px;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { display: flex; gap: 10px; align-items: center; }
+    .btn {
+      padding: 8px 18px; border-radius: 8px; font-size: 14px;
+      font-weight: 500; cursor: pointer; border: none; transition: all .2s;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+    .btn-primary {
+      background: var(--gradient); color: #fff;
+      box-shadow: 0 0 20px rgba(124,58,237,0.3);
+    }
+    .btn-primary:hover { opacity: .9; box-shadow: 0 0 30px rgba(124,58,237,0.5); transform: translateY(-1px); }
+    .btn-lg { padding: 14px 28px; font-size: 16px; border-radius: 12px; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; padding: 120px 40px 80px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 50%, rgba(6,182,212,0.08) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 99px;
+      background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
+      font-size: 13px; color: #a78bfa; margin-bottom: 28px;
+      position: relative; z-index: 1;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+    h1 {
+      font-size: clamp(40px, 6vw, 80px); font-weight: 800; letter-spacing: -2px;
+      line-height: 1.05; margin-bottom: 24px; position: relative; z-index: 1;
+    }
+    .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p {
+      max-width: 560px; color: var(--muted); font-size: 18px;
+      margin-bottom: 40px; position: relative; z-index: 1;
+    }
+    .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
+    .hero-stats {
+      display: flex; gap: 48px; margin-top: 72px; position: relative; z-index: 1;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* ── DASHBOARD MOCKUP ── */
+    .dashboard-section {
+      padding: 0 40px 100px;
+      display: flex; justify-content: center;
+    }
+    .dashboard-wrapper {
+      width: 100%; max-width: 1100px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+      position: relative;
+    }
+    .dashboard-wrapper::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(124,58,237,0.5), rgba(6,182,212,0.5), transparent);
+    }
+    .dash-topbar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dash-url {
+      flex: 1; background: var(--bg); border-radius: 6px;
+      padding: 5px 12px; font-size: 12px; color: var(--muted);
+      border: 1px solid var(--border); margin: 0 12px;
+    }
+    .dash-layout { display: grid; grid-template-columns: 200px 1fr; }
+    .dash-sidebar {
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      padding: 16px 12px;
+      min-height: 480px;
+    }
+    .dash-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px;
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 2px; cursor: pointer;
+      transition: all .15s;
+    }
+    .dash-nav-item.active { background: rgba(124,58,237,0.15); color: #a78bfa; }
+    .dash-nav-item:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
+    .dash-nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .dash-content { padding: 24px; }
+    .dash-heading { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+    .dash-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px;
+    }
+    .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+    .kpi-value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+    .kpi-change { font-size: 12px; color: var(--accent-3); margin-top: 4px; }
+    .dash-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .dash-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px;
+    }
+    .dash-card-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--muted); }
+    .mini-bar { display: flex; gap: 3px; align-items: flex-end; height: 60px; }
+    .bar {
+      flex: 1; border-radius: 4px 4px 0 0;
+      background: rgba(124,58,237,0.4);
+      transition: background .2s;
+    }
+    .bar.accent { background: rgba(6,182,212,0.5); }
+    .bar:hover { background: rgba(124,58,237,0.8); }
+    .pipeline-items { display: flex; flex-direction: column; gap: 6px; }
+    .pipeline-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .pipeline-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .pipeline-label { color: var(--muted); flex: 1; }
+    .pipeline-val { font-weight: 600; }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 100px 40px; }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 99px;
+      background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2);
+      font-size: 12px; color: #a78bfa; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;
+    }
+    h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 700; letter-spacing: -1px; line-height: 1.1; margin-bottom: 16px; }
+    .section-sub { color: var(--muted); font-size: 18px; max-width: 560px; margin: 0 auto; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* ── MODULES GRID ── */
+    .modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .module-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: all .3s;
+      cursor: default;
+    }
+    .module-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      opacity: 0; transition: opacity .3s;
+    }
+    .module-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .module-card:hover::before { opacity: 1; }
+    .module-card.purple::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    .module-card.cyan::before { background: linear-gradient(90deg, #06b6d4, #67e8f9); }
+    .module-card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+    .module-card.amber::before { background: linear-gradient(90deg, #f59e0b, #fcd34d); }
+    .module-card.red::before { background: linear-gradient(90deg, #ef4444, #fca5a5); }
+    .module-card.indigo::before { background: linear-gradient(90deg, #6366f1, #a5b4fc); }
+    .module-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 20px;
+    }
+    .module-icon.purple { background: rgba(124,58,237,0.15); }
+    .module-icon.cyan { background: rgba(6,182,212,0.15); }
+    .module-icon.green { background: rgba(16,185,129,0.15); }
+    .module-icon.amber { background: rgba(245,158,11,0.15); }
+    .module-icon.red { background: rgba(239,68,68,0.15); }
+    .module-icon.indigo { background: rgba(99,102,241,0.15); }
+    .module-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .module-card p { color: var(--muted); font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+    .module-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .module-features li {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--muted);
+    }
+    .module-features li::before { content: '✓'; color: var(--accent-3); font-weight: 700; flex-shrink: 0; }
+
+    /* ── SOCIAL LEADS SECTION ── */
+    .social-section { background: var(--surface); }
+    .social-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .social-text h2 { text-align: left; }
+    .social-text .section-badge { margin-bottom: 16px; }
+    .social-text p { color: var(--muted); font-size: 16px; line-height: 1.8; margin-bottom: 24px; }
+    .social-channels { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+    .channel-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 99px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      font-size: 13px; font-weight: 500;
+    }
+    .channel-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .social-visual {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 24px; position: relative;
+    }
+    .lead-flow { display: flex; flex-direction: column; gap: 12px; }
+    .lead-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      animation: slideIn .5s ease forwards;
+      opacity: 0;
+    }
+    .lead-item:nth-child(1) { animation-delay: .1s; }
+    .lead-item:nth-child(2) { animation-delay: .3s; }
+    .lead-item:nth-child(3) { animation-delay: .5s; }
+    .lead-item:nth-child(4) { animation-delay: .7s; }
+    @keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+    .lead-avatar {
+      width: 36px; height: 36px; border-radius: 99px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .lead-info { flex: 1; }
+    .lead-name { font-size: 14px; font-weight: 600; }
+    .lead-source { font-size: 12px; color: var(--muted); }
+    .lead-badge {
+      font-size: 11px; padding: 3px 8px; border-radius: 99px;
+      font-weight: 600;
+    }
+    .badge-new { background: rgba(16,185,129,0.15); color: #34d399; }
+    .badge-hot { background: rgba(239,68,68,0.15); color: #fca5a5; }
+    .badge-warm { background: rgba(245,158,11,0.15); color: #fcd34d; }
+    .badge-cold { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+
+    /* ── ECOMMERCE SECTION ── */
+    .ecom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .ecom-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px;
+      transition: all .3s;
+    }
+    .ecom-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-3px); }
+    .ecom-card.featured {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(6,182,212,0.05));
+      border-color: rgba(124,58,237,0.2);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;
+    }
+    .product-preview {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+    .product-list { display: flex; flex-direction: column; gap: 10px; }
+    .product-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px; border-radius: 8px;
+      background: var(--surface-2); font-size: 13px;
+    }
+    .product-thumb {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .product-name { flex: 1; font-weight: 500; }
+    .product-price { color: var(--accent-3); font-weight: 600; }
+    .product-sales { font-size: 11px; color: var(--muted); }
+
+    /* ── AI SECTION ── */
+    .ai-section { background: linear-gradient(135deg, rgba(124,58,237,0.05), var(--bg)); }
+    .ai-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .ai-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      transition: all .3s;
+    }
+    .ai-card:hover { border-color: rgba(124,58,237,0.3); box-shadow: 0 0 30px rgba(124,58,237,0.1); }
+    .ai-card-icon { font-size: 32px; margin-bottom: 16px; }
+    .ai-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .ai-card p { font-size: 13px; color: var(--muted); }
+
+    /* ── AUTOMATION SECTION ── */
+    .auto-section { background: var(--surface); }
+    .auto-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .flow-diagram {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px;
+    }
+    .flow-node {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 500; margin-bottom: 4px;
+    }
+    .flow-arrow {
+      width: 2px; height: 20px; background: var(--border);
+      margin: 0 auto 4px; position: relative;
+    }
+    .flow-arrow::after {
+      content: ''; position: absolute; bottom: -4px; left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent; border-top-color: var(--muted);
+    }
+    .flow-node .fn-icon { font-size: 18px; }
+    .flow-node .fn-badge {
+      margin-left: auto; font-size: 11px; padding: 2px 8px;
+      border-radius: 99px; background: rgba(124,58,237,0.15); color: #a78bfa;
+    }
+    .flow-branch { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+    .flow-node.success { border-color: rgba(16,185,129,0.3); }
+    .flow-node.warning { border-color: rgba(245,158,11,0.3); }
+
+    /* ── PRICING ── */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
+    .pricing-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px;
+      position: relative; transition: all .3s;
+    }
+    .pricing-card.featured {
+      border-color: rgba(124,58,237,0.4);
+      background: linear-gradient(135deg, rgba(124,58,237,0.08), var(--surface-2));
+      box-shadow: 0 0 60px rgba(124,58,237,0.15);
+    }
+    .pricing-card:hover { transform: translateY(-4px); }
+    .popular-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--gradient); padding: 4px 16px; border-radius: 99px;
+      font-size: 12px; font-weight: 600; white-space: nowrap;
+    }
+    .pricing-name { font-size: 14px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .pricing-price { font-size: 48px; font-weight: 800; letter-spacing: -2px; margin-bottom: 4px; }
+    .pricing-period { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .pricing-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+    .pricing-features li { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .pricing-features li::before { content: '✓'; color: var(--accent-3); font-weight: 700; }
+    .pricing-features li.off { color: var(--muted); }
+    .pricing-features li.off::before { content: '—'; color: var(--border); }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--text); width: 100%; justify-content: center; padding: 12px; border-radius: 10px; }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.3); }
+    .btn-primary-full { background: var(--gradient); color: #fff; width: 100%; justify-content: center; padding: 12px; border-radius: 10px; box-shadow: 0 0 20px rgba(124,58,237,0.3); }
+    .btn-primary-full:hover { opacity: .9; box-shadow: 0 0 30px rgba(124,58,237,0.5); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 60px 40px 40px;
+      background: var(--surface);
+    }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto 40px; }
+    .footer-brand p { color: var(--muted); font-size: 14px; max-width: 280px; margin-top: 12px; }
+    .footer-col h5 { font-size: 13px; font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: .5px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: var(--muted); font-size: 14px; text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      color: var(--muted); font-size: 13px; max-width: 1200px; margin: 0 auto;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .modules-grid { grid-template-columns: repeat(2, 1fr); }
+      .social-layout, .auto-layout { grid-template-columns: 1fr; gap: 40px; }
+      .ai-grid { grid-template-columns: repeat(2, 1fr); }
+      .ecom-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+      .dash-layout { grid-template-columns: 1fr; }
+      .dash-sidebar { display: none; }
+      .dash-kpis { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 440px; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      section, .hero { padding: 80px 20px; }
+      .modules-grid { grid-template-columns: 1fr; }
+      .ai-grid { grid-template-columns: 1fr; }
+      .ecom-grid { grid-template-columns: 1fr; }
+      .dash-row { grid-template-columns: 1fr; }
+      .dash-kpis { grid-template-columns: 1fr 1fr; }
+      footer { padding: 40px 20px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-icon">⚡</div>
+    Nex<span class="gradient-text">CRM</span>
+  </div>
+  <div class="nav-links">
+    <a href="#modulos">Módulos</a>
+    <a href="#ecommerce">E-commerce</a>
+    <a href="#social">Social Leads</a>
+    <a href="#automatizacion">Automatización</a>
+    <a href="#precios">Precios</a>
+  </div>
+  <div class="nav-cta">
+    <a href="#" class="btn btn-ghost">Iniciar sesión</a>
+    <a href="#" class="btn btn-primary">Empezar gratis →</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Plataforma todo en uno · Actualizado 2026
+  </div>
+  <h1>El CRM que<br/><span class="gradient-text">escala tu negocio</span></h1>
+  <p>Gestión de clientes, e-commerce digital, captura de leads en redes sociales, automatizaciones con IA. Todo en un solo lugar, sin complicaciones.</p>
+  <div class="hero-buttons">
+    <a href="#" class="btn btn-primary btn-lg">Comenzar gratis — 14 días</a>
+    <a href="#" class="btn btn-ghost btn-lg">Ver demo en vivo ↗</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num gradient-text">12k+</div>
+      <div class="stat-label">Empresas activas</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num gradient-text">98%</div>
+      <div class="stat-label">Satisfacción cliente</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num gradient-text">3.2M</div>
+      <div class="stat-label">Leads capturados</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num gradient-text">99.9%</div>
+      <div class="stat-label">Uptime garantizado</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DASHBOARD MOCKUP ── -->
+<div class="dashboard-section">
+  <div class="dashboard-wrapper">
+    <div class="dash-topbar">
+      <div class="dash-dot" style="background:#ef4444"></div>
+      <div class="dash-dot" style="background:#f59e0b"></div>
+      <div class="dash-dot" style="background:#10b981"></div>
+      <div class="dash-url">app.nexcrm.io/dashboard</div>
+      <div style="font-size:12px;color:var(--muted)">⬤ Conectado</div>
+    </div>
+    <div class="dash-layout">
+      <div class="dash-sidebar">
+        <div class="dash-nav-item active"><span class="dash-nav-icon">▦</span>Dashboard</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">👥</span>Clientes</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">🛒</span>E-commerce</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">📱</span>Social Media</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">📧</span>Campañas</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">⚡</span>Automatizaciones</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">📊</span>Analytics</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">🤖</span>IA Asistente</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">💰</span>Facturación</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">⚙️</span>Configuración</div>
+      </div>
+      <div class="dash-content">
+        <div class="dash-heading">Panel principal</div>
+        <div class="dash-kpis">
+          <div class="kpi-card">
+            <div class="kpi-label">Ingresos (mes)</div>
+            <div class="kpi-value">$48,290</div>
+            <div class="kpi-change">↑ 23.4% vs mes anterior</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Nuevos leads</div>
+            <div class="kpi-value">1,284</div>
+            <div class="kpi-change" style="color:#06b6d4">↑ 18.7% desde sociales</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Conversiones</div>
+            <div class="kpi-value">342</div>
+            <div class="kpi-change">↑ 12.1% tasa conversión</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">NPS Score</div>
+            <div class="kpi-value">87</div>
+            <div class="kpi-change" style="color:#a78bfa">↑ +4 puntos</div>
+          </div>
+        </div>
+        <div class="dash-row">
+          <div class="dash-card">
+            <div class="dash-card-title">INGRESOS POR SEMANA</div>
+            <div class="mini-bar">
+              <div class="bar" style="height:40%"></div>
+              <div class="bar" style="height:60%"></div>
+              <div class="bar accent" style="height:45%"></div>
+              <div class="bar" style="height:80%"></div>
+              <div class="bar" style="height:55%"></div>
+              <div class="bar" style="height:90%"></div>
+              <div class="bar accent" style="height:75%"></div>
+              <div class="bar" style="height:100%"></div>
+            </div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">PIPELINE DE VENTAS</div>
+            <div class="pipeline-items">
+              <div class="pipeline-item">
+                <div class="pipeline-dot" style="background:#a78bfa"></div>
+                <div class="pipeline-label">Nuevos leads</div>
+                <div class="pipeline-val">482</div>
+              </div>
+              <div class="pipeline-item">
+                <div class="pipeline-dot" style="background:#06b6d4"></div>
+                <div class="pipeline-label">En contacto</div>
+                <div class="pipeline-val">218</div>
+              </div>
+              <div class="pipeline-item">
+                <div class="pipeline-dot" style="background:#f59e0b"></div>
+                <div class="pipeline-label">Propuesta enviada</div>
+                <div class="pipeline-val">94</div>
+              </div>
+              <div class="pipeline-item">
+                <div class="pipeline-dot" style="background:#10b981"></div>
+                <div class="pipeline-label">Cerrados</div>
+                <div class="pipeline-val">342</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MÓDULOS ── -->
+<section id="modulos">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">✦ Módulos</div>
+      <h2>Todo lo que necesitas<br/>en una sola plataforma</h2>
+      <p class="section-sub">Desde la captación hasta la fidelización, cada módulo está diseñado para trabajar de forma integrada.</p>
+    </div>
+    <div class="modules-grid">
+
+      <div class="module-card purple">
+        <div class="module-icon purple">👥</div>
+        <h3>Gestión de Clientes</h3>
+        <p>Centraliza toda la información de tus contactos con historial completo de interacciones y segmentación inteligente.</p>
+        <ul class="module-features">
+          <li>Perfiles 360° de clientes</li>
+          <li>Historial de interacciones</li>
+          <li>Segmentación avanzada</li>
+          <li>Etiquetas y campos personalizados</li>
+          <li>Importación masiva CSV / Excel</li>
+        </ul>
+      </div>
+
+      <div class="module-card cyan">
+        <div class="module-icon cyan">🛒</div>
+        <h3>E-commerce Digital</h3>
+        <p>Vende cursos, ebooks, templates, software y cualquier producto digital con checkout optimizado y entregas automáticas.</p>
+        <ul class="module-features">
+          <li>Catálogo de productos digitales</li>
+          <li>Pagos con Stripe, PayPal, cripto</li>
+          <li>Entrega automatizada al instante</li>
+          <li>Licencias y accesos controlados</li>
+          <li>Upsells y bundles</li>
+        </ul>
+      </div>
+
+      <div class="module-card green">
+        <div class="module-icon green">📱</div>
+        <h3>Social Media & Leads</h3>
+        <p>Conecta tus redes sociales y captura leads automáticamente desde Instagram, TikTok, LinkedIn, X y más.</p>
+        <ul class="module-features">
+          <li>Captura de leads automatizada</li>
+          <li>Bandeja de entrada unificada</li>
+          <li>Publicación y calendario editorial</li>
+          <li>Métricas de engagement</li>
+          <li>Chatbots en DMs</li>
+        </ul>
+      </div>
+
+      <div class="module-card amber">
+        <div class="module-icon amber">📧</div>
+        <h3>Email Marketing</h3>
+        <p>Crea secuencias de email personalizadas, newsletters y campañas segmentadas con editor visual drag & drop.</p>
+        <ul class="module-features">
+          <li>Editor drag & drop</li>
+          <li>Secuencias automatizadas</li>
+          <li>Test A/B de asunto y contenido</li>
+          <li>Deliverability optimizada</li>
+          <li>Analytics en tiempo real</li>
+        </ul>
+      </div>
+
+      <div class="module-card red">
+        <div class="module-icon red">⚡</div>
+        <h3>Automatizaciones</h3>
+        <p>Crea flujos de trabajo visuales que trabajan 24/7 por ti: seguimientos, notificaciones, actualizaciones de CRM y más.</p>
+        <ul class="module-features">
+          <li>Constructor visual sin código</li>
+          <li>+200 integraciones (Zapier, Make)</li>
+          <li>Triggers por comportamiento</li>
+          <li>Webhooks y API REST</li>
+          <li>Flujos de aprobación</li>
+        </ul>
+      </div>
+
+      <div class="module-card indigo">
+        <div class="module-icon indigo">🤖</div>
+        <h3>IA & Analytics</h3>
+        <p>Inteligencia artificial integrada que predice comportamientos, sugiere acciones y genera contenido para tus campañas.</p>
+        <ul class="module-features">
+          <li>Lead scoring predictivo</li>
+          <li>Asistente IA para redacción</li>
+          <li>Dashboards personalizables</li>
+          <li>Previsión de ventas</li>
+          <li>Detección de churn</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SOCIAL LEADS ── -->
+<section id="social" class="social-section">
+  <div class="container">
+    <div class="social-layout">
+      <div class="social-text">
+        <div class="section-badge">📱 Social Leads</div>
+        <h2>Convierte seguidores<br/>en clientes</h2>
+        <p>Conecta todas tus redes sociales y captura leads automáticamente. Cada comentario, DM o formulario se convierte en un contacto en tu CRM al instante, listo para ser nutrido.</p>
+        <div class="social-channels">
+          <div class="channel-pill"><div class="dot" style="background:#e1306c"></div>Instagram</div>
+          <div class="channel-pill"><div class="dot" style="background:#000010"></div>TikTok</div>
+          <div class="channel-pill"><div class="dot" style="background:#0077b5"></div>LinkedIn</div>
+          <div class="channel-pill"><div class="dot" style="background:#1da1f2"></div>X / Twitter</div>
+          <div class="channel-pill"><div class="dot" style="background:#1877f2"></div>Facebook</div>
+          <div class="channel-pill"><div class="dot" style="background:#25d366"></div>WhatsApp</div>
+        </div>
+        <a href="#" class="btn btn-primary btn-lg">Ver integración social →</a>
+      </div>
+      <div class="social-visual">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px;font-weight:600">LEADS CAPTADOS EN TIEMPO REAL</div>
+        <div class="lead-flow">
+          <div class="lead-item">
+            <div class="lead-avatar" style="background:rgba(225,48,108,0.15)">📷</div>
+            <div class="lead-info">
+              <div class="lead-name">María García</div>
+              <div class="lead-source">Instagram · Comentario en reel</div>
+            </div>
+            <div class="lead-badge badge-hot">🔥 Caliente</div>
+          </div>
+          <div class="lead-item">
+            <div class="lead-avatar" style="background:rgba(0,119,181,0.15)">💼</div>
+            <div class="lead-info">
+              <div class="lead-name">Carlos Méndez</div>
+              <div class="lead-source">LinkedIn · Formulario lead ad</div>
+            </div>
+            <div class="lead-badge badge-new">✦ Nuevo</div>
+          </div>
+          <div class="lead-item">
+            <div class="lead-avatar" style="background:rgba(37,211,102,0.15)">💬</div>
+            <div class="lead-info">
+              <div class="lead-name">Ana Rodríguez</div>
+              <div class="lead-source">WhatsApp · Palabra clave "INFO"</div>
+            </div>
+            <div class="lead-badge badge-warm">⬆ Tibio</div>
+          </div>
+          <div class="lead-item">
+            <div class="lead-avatar" style="background:rgba(0,0,16,0.5)">🎵</div>
+            <div class="lead-info">
+              <div class="lead-name">Pedro Alves</div>
+              <div class="lead-source">TikTok · DM automático</div>
+            </div>
+            <div class="lead-badge badge-cold">❄ Frío</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:10px;font-size:13px;color:#34d399;text-align:center">
+          ⚡ 4 nuevos leads en los últimos 12 minutos
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ECOMMERCE ── -->
+<section id="ecommerce">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">🛒 E-commerce Digital</div>
+      <h2>Vende productos digitales<br/>sin fricción</h2>
+      <p class="section-sub">Checkout rápido, entregas automáticas y control total de tus ventas. Todo integrado con tu CRM.</p>
+    </div>
+    <div class="ecom-grid">
+      <div class="ecom-card featured">
+        <div>
+          <h3 style="font-size:24px;margin-bottom:12px">Tu tienda digital<br/>lista en minutos</h3>
+          <p style="color:var(--muted);margin-bottom:20px">Crea tu catálogo, configura los pagos y empieza a vender. El sistema gestiona automáticamente las licencias, accesos y entregas.</p>
+          <a href="#" class="btn btn-primary btn-lg">Crear mi tienda →</a>
+        </div>
+        <div class="product-preview">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-weight:600">MIS PRODUCTOS</div>
+          <div class="product-list">
+            <div class="product-row">
+              <div class="product-thumb" style="background:rgba(124,58,237,0.15)">📚</div>
+              <div class="product-name">Curso de Marketing Digital</div>
+              <div>
+                <div class="product-price">$197</div>
+                <div class="product-sales" style="color:var(--muted)">342 ventas</div>
+              </div>
+            </div>
+            <div class="product-row">
+              <div class="product-thumb" style="background:rgba(6,182,212,0.15)">📄</div>
+              <div class="product-name">Pack de Templates Canva</div>
+              <div>
+                <div class="product-price">$47</div>
+                <div class="product-sales" style="color:var(--muted)">891 ventas</div>
+              </div>
+            </div>
+            <div class="product-row">
+              <div class="product-thumb" style="background:rgba(16,185,129,0.15)">💻</div>
+              <div class="product-name">Software de Automatización</div>
+              <div>
+                <div class="product-price">$97/mes</div>
+                <div class="product-sales" style="color:var(--muted)">128 suscripciones</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ecom-card">
+        <div style="font-size:36px;margin-bottom:16px">💳</div>
+        <h3>Pagos globales</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.7">Acepta pagos con tarjeta, PayPal, transferencia, criptomonedas y métodos locales en más de 40 países.</p>
+      </div>
+      <div class="ecom-card">
+        <div style="font-size:36px;margin-bottom:16px">🔐</div>
+        <h3>Licencias & Accesos</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.7">Control automático de licencias, accesos por tiempo, membresías y gestión de suscripciones recurrentes.</p>
+      </div>
+      <div class="ecom-card">
+        <div style="font-size:36px;margin-bottom:16px">📈</div>
+        <h3>Upsells & Afiliados</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.7">Aumenta el ticket medio con upsells, order bumps y gestiona tu programa de afiliados con comisiones automáticas.</p>
+      </div>
+      <div class="ecom-card">
+        <div style="font-size:36px;margin-bottom:16px">🚀</div>
+        <h3>Entrega automática</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.7">Tras la compra, el cliente recibe acceso inmediato. Sin intervención manual, disponible 24/7 en cualquier zona horaria.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AUTOMATIZACION ── -->
+<section id="automatizacion" class="auto-section">
+  <div class="container">
+    <div class="auto-layout">
+      <div class="flow-diagram">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:20px;font-weight:600">FLUJO DE AUTOMATIZACIÓN</div>
+        <div class="flow-node">
+          <span class="fn-icon">🎯</span>
+          Nuevo lead desde Instagram
+          <span class="fn-badge">Trigger</span>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-node">
+          <span class="fn-icon">📧</span>
+          Enviar email de bienvenida
+          <span class="fn-badge">Acción</span>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-node">
+          <span class="fn-icon">⏱</span>
+          Esperar 2 días
+          <span class="fn-badge">Delay</span>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-node" style="color:var(--muted)">
+          <span class="fn-icon">❓</span>
+          ¿Abrió el email?
+          <span class="fn-badge">Condición</span>
+        </div>
+        <div class="flow-branch">
+          <div class="flow-node success">
+            <span class="fn-icon">✅</span>
+            Enviar oferta especial
+          </div>
+          <div class="flow-node warning">
+            <span class="fn-icon">💬</span>
+            DM de seguimiento
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-badge">⚡ Automatizaciones</div>
+        <h2 style="text-align:left">Trabaja mientras<br/>duermes</h2>
+        <p style="color:var(--muted);margin:16px 0 24px;font-size:16px;line-height:1.8">Crea flujos de trabajo visuales que reaccionan automáticamente a cada acción de tus leads y clientes. Sin código, sin complicaciones.</p>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(124,58,237,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎯</div>
+            <div>
+              <div style="font-weight:600;margin-bottom:4px">Triggers inteligentes</div>
+              <div style="color:var(--muted);font-size:14px">Visitas a página, compras, emails abiertos, tiempo transcurrido, formularios y más de 50 eventos.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(6,182,212,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔗</div>
+            <div>
+              <div style="font-weight:600;margin-bottom:4px">+200 integraciones</div>
+              <div style="color:var(--muted);font-size:14px">Conecta con Slack, Google Sheets, Notion, Shopify, Stripe, Zapier, Make y más.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🤖</div>
+            <div>
+              <div style="font-weight:600;margin-bottom:4px">IA en los flujos</div>
+              <div style="color:var(--muted);font-size:14px">Personaliza mensajes con IA según el comportamiento, industria y perfil de cada lead.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── IA FEATURES ── -->
+<section class="ai-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">🤖 Inteligencia Artificial</div>
+      <h2>IA que potencia<br/>cada decisión</h2>
+      <p class="section-sub">La IA trabaja en segundo plano analizando datos, prediciendo comportamientos y sugiriendo las mejores acciones.</p>
+    </div>
+    <div class="ai-grid">
+      <div class="ai-card">
+        <div class="ai-card-icon">🎯</div>
+        <h4>Lead Scoring IA</h4>
+        <p>Puntúa automáticamente cada lead según comportamiento, demografía e historial para priorizar tu equipo de ventas.</p>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">✍️</div>
+        <h4>Redacción con IA</h4>
+        <p>Genera emails, publicaciones en redes sociales y descripciones de productos en segundos con tu tono de voz.</p>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">📉</div>
+        <h4>Detección de Churn</h4>
+        <p>Identifica clientes con riesgo de abandono antes de que ocurra y lanza acciones de retención automáticas.</p>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">📅</div>
+        <h4>Mejor hora de envío</h4>
+        <p>La IA determina cuándo cada contacto tiene más probabilidad de abrir tu email o interactuar con tu contenido.</p>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">💬</div>
+        <h4>Chatbot conversacional</h4>
+        <p>Chatbot con IA para tu web y redes sociales que califica leads, responde dudas y agenda llamadas automáticamente.</p>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">📊</div>
+        <h4>Insights predictivos</h4>
+        <p>Previsión de ingresos, análisis de tendencias y recomendaciones de productos personalizadas para cada cliente.</p>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">🔍</div>
+        <h4>Búsqueda semántica</h4>
+        <p>Encuentra cualquier contacto, conversación o documento con búsqueda en lenguaje natural dentro del CRM.</p>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">🎙️</div>
+        <h4>Transcripción de llamadas</h4>
+        <p>Transcribe y resume automáticamente las llamadas con clientes, extrayendo tareas pendientes y compromisos clave.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="precios">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">💰 Precios</div>
+      <h2>Planes que crecen<br/>contigo</h2>
+      <p class="section-sub">Sin costes ocultos. Cancela cuando quieras. 14 días de prueba gratuita en todos los planes.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-name">Starter</div>
+        <div class="pricing-price">$29</div>
+        <div class="pricing-period">por mes · hasta 1.000 contactos</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Gestión de contactos</li>
+          <li>Pipeline de ventas</li>
+          <li>Email marketing (5k envíos/mes)</li>
+          <li>1 integración social</li>
+          <li>5 automatizaciones</li>
+          <li class="off">E-commerce digital</li>
+          <li class="off">IA avanzada</li>
+          <li class="off">API access</li>
+        </ul>
+        <a href="#" class="btn btn-outline">Empezar gratis</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="popular-badge">✦ Más popular</div>
+        <div class="pricing-name">Pro</div>
+        <div class="pricing-price"><span class="gradient-text">$89</span></div>
+        <div class="pricing-period">por mes · hasta 10.000 contactos</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Todo lo de Starter</li>
+          <li>E-commerce digital completo</li>
+          <li>Todas las integraciones sociales</li>
+          <li>Email ilimitado</li>
+          <li>Automatizaciones ilimitadas</li>
+          <li>IA: scoring, redacción, chatbot</li>
+          <li>API access</li>
+          <li class="off">Soporte dedicado</li>
+        </ul>
+        <a href="#" class="btn btn-primary-full">Empezar con Pro</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-name">Enterprise</div>
+        <div class="pricing-price">Custom</div>
+        <div class="pricing-period">contactos ilimitados · SLA garantizado</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Todo lo de Pro</li>
+          <li>Onboarding personalizado</li>
+          <li>Account manager dedicado</li>
+          <li>SSO & permisos avanzados</li>
+          <li>IA personalizada con tus datos</li>
+          <li>White label disponible</li>
+          <li>SLA 99.99% uptime</li>
+          <li>Integraciones a medida</li>
+        </ul>
+        <a href="#" class="btn btn-outline">Hablar con ventas</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA FINAL ── -->
+<section style="padding:80px 40px;text-align:center;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div style="max-width:640px;margin:0 auto">
+      <h2 style="font-size:clamp(32px,4vw,52px)">Listo para hacer<br/><span class="gradient-text">crecer tu negocio</span></h2>
+      <p style="color:var(--muted);font-size:18px;margin:20px 0 36px">Únete a más de 12.000 empresas que ya usan NexCRM para gestionar clientes, vender productos digitales y captar leads en piloto automático.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="#" class="btn btn-primary btn-lg">Empezar gratis — 14 días ↗</a>
+        <a href="#" class="btn btn-ghost btn-lg">Hablar con un experto</a>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-top:20px">No se requiere tarjeta de crédito · Cancela cuando quieras · Soporte en español</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo" style="font-size:22px">
+        <div class="logo-icon">⚡</div>
+        Nex<span class="gradient-text">CRM</span>
+      </div>
+      <p>La plataforma todo en uno para gestionar clientes, vender digital y captar leads en redes sociales.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Producto</h5>
+      <ul class="footer-links">
+        <li><a href="#">Características</a></li>
+        <li><a href="#">E-commerce</a></li>
+        <li><a href="#">Social Leads</a></li>
+        <li><a href="#">Automatizaciones</a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Precios</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Empresa</h5>
+      <ul class="footer-links">
+        <li><a href="#">Acerca de</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Casos de éxito</a></li>
+        <li><a href="#">Afiliados</a></li>
+        <li><a href="#">Trabajar con nosotros</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Soporte</h5>
+      <ul class="footer-links">
+        <li><a href="#">Centro de ayuda</a></li>
+        <li><a href="#">Documentación API</a></li>
+        <li><a href="#">Estado del sistema</a></li>
+        <li><a href="#">Comunidad</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 NexCRM. Todos los derechos reservados.</div>
+    <div style="display:flex;gap:20px">
+      <a href="#" style="color:var(--muted);text-decoration:none">Privacidad</a>
+      <a href="#" style="color:var(--muted);text-decoration:none">Términos</a>
+      <a href="#" style="color:var(--muted);text-decoration:none">Cookies</a>
+      <a href="#" style="color:var(--muted);text-decoration:none">RGPD</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
